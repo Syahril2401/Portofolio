@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Muhammad Syahril</title>
+<meta name="description" content="Drop me a message! Get in touch about projects, collaborations or anything creative." />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="font-dm">
+
+<!-- ============ HEADER ============
+     Same header as the home page: "MSA" left, "Menu" right, hides on
+     scroll-down and returns on scroll-up. -->
+<header class="site-header" id="header">
+  <a class="logo" href="index.html" aria-label="Back to home">MSA</a>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="menu">
+    <span class="menu-toggle-label" data-text="Menu">Menu</span>
+  </button>
+</header>
+
+<!-- ============ MENU OVERLAY ============ -->
+<div class="menu" id="menu" hidden>
+  <div class="menu-inner">
+    <nav class="menu-list" aria-label="Main">
+      <a class="menu-item" href="index.html"><span data-i18n="menu.home">Home</span></a>
+      <a class="menu-item" href="project.html"><span data-i18n="menu.project">Project</span></a>
+      <a class="menu-item" href="contact.html"><span data-i18n="menu.contact">Contact</span></a>
+    </nav>
+    <div class="menu-lang" aria-label="Language">
+      <button class="lang is-active" type="button" data-lang="id">ID</button>
+      <span class="lang-sep">|</span>
+      <button class="lang" type="button" data-lang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============
+     The original centres one line of text in the viewport and drives it with
+     a WebGL SDF shader (uReveal / uDelta follow the pointer). Here the same
+     behaviour is reproduced with layered DOM: a blurred, clipped duplicate of
+     the text tracks the pointer to give the soft-edged reveal, while the
+     crisp layer stays put. On coarse pointers it degrades to plain centred
+     text, exactly as the original does on mobile. -->
+<section class="contact-stage" id="contactStage">
+  <div class="contact-headline" id="contactHeadline">
+    <span class="contact-glow" aria-hidden="true" data-i18n="contact.headline">Drop me a message !</span>
+    <span class="contact-text" data-i18n="contact.headline">Drop me a message !</span>
+  </div>
+  <p class="sr-only" id="contactSr" aria-live="polite" data-i18n="contact.headlineSr">Drop me a message!</p>
+</section>
+
+<!-- ============ CONTACT LINKS ============
+     Each link is a two-row stack: the label sits in row 1 and the real
+     destination (email address / handle) in row 2. Hovering slides row 1 up
+     and row 2 into place, the way the original does with a 24px offset.
+     Mail copies the address to the clipboard rather than opening a client. -->
+<footer class="contact-bar" id="contactBar">
+
+  <div class="c-link" data-anchor="left">
+    <span class="c-link-ghost" aria-hidden="true">muhammadsyahril2406@gmail.com</span>
+    <button class="c-link-row c-link-row-a" type="button" data-copy="muhammadsyahril2406@gmail.com" data-i18n="contact.mail">Mail</button>
+    <span class="c-link-row c-link-row-b" aria-hidden="true">muhammadsyahril2406@gmail.com</span>
+  </div>
+
+  <div class="c-link" data-anchor="center">
+    <span class="c-link-ghost" aria-hidden="true">Muhammad Syahril Alauddin</span>
+    <a class="c-link-row c-link-row-a" href="https://www.linkedin.com/in/muhammad-syahril-alauddin-382615288/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <span class="c-link-row c-link-row-b" aria-hidden="true">Muhammad Syahril Alauddin</span>
+  </div>
+
+  <div class="c-link" data-anchor="center">
+    <span class="c-link-ghost" aria-hidden="true">@_syaarill06</span>
+    <a class="c-link-row c-link-row-a" href="https://www.instagram.com/_syaarill06/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <span class="c-link-row c-link-row-b" aria-hidden="true">@_syaarill06</span>
+  </div>
+
+  <div class="c-link" data-anchor="right">
+    <span class="c-link-ghost" aria-hidden="true">Syahriluddin</span>
+    <a class="c-link-row c-link-row-a" href="https://github.com/Syahril2401" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <span class="c-link-row c-link-row-b" aria-hidden="true">Syahriluddin</span>
+  </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

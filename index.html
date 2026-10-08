@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Syahril</title>
+  <meta name="description"
+    content="Hey, I'm Muhammad Syahril, a creative developer who loves to bring life to your projects. Discover my portfolio through the projects I have been involved in." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-dm">
+
+  <!-- reading-progress indicator, driven by animation-timeline: scroll() -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <!-- Hides on scroll-down, returns on scroll-up. -->
+  <header class="site-header" id="header">
+    <a class="logo" href="#top" aria-label="Back to top">MSA</a>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="menu">
+      <span class="menu-toggle-label" data-text="Menu">Menu</span>
+    </button>
+  </header>
+
+  <!-- ============ MENU OVERLAY ============ -->
+  <div class="menu" id="menu" hidden>
+    <div class="menu-inner">
+      <nav class="menu-list" aria-label="Main">
+        <a class="menu-item" href="index.html"><span data-i18n="menu.home">Home</span></a>
+        <a class="menu-item" href="project.html"><span data-i18n="menu.project">Project</span></a>
+        <a class="menu-item" href="contact.html"><span data-i18n="menu.contact">Contact</span></a>
+      </nav>
+      <div class="menu-lang" aria-label="Language">
+        <button class="lang is-active" type="button" data-lang="id">ID</button>
+        <span class="lang-sep">|</span>
+        <button class="lang" type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="page">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <!-- No hard <br>: the reference wraps naturally at ~723px. JS splits this
+           into per-word spans for the scroll-driven reveal. -->
+        <p class="hero-intro" id="heroIntro">
+          Hey, I’m Muhammad Syahril,<br> a creative developer who loves to bring
+          life to your projects.
+        </p>
+      </div>
+
+      <!-- Portrait: line-art sketch that cross-fades to the photo on hover.
+         To use your own photo, replace portrait-photo.svg with your image file
+         and update the src below — nothing else needs to change. -->
+      <figure class="portrait" id="portrait" tabindex="0"
+        aria-label="Portrait of Muhammad Syahril — hover to reveal the photograph">
+        <div class="portrait-inner">
+          <img class="portrait-layer portrait-sketch" src="portrait-sketch.svg" alt="" aria-hidden="true" />
+          <img class="portrait-layer portrait-photo" src="pas%20photo/Pas_Photo_Muhammad_Syahril_Alauddin_0066230647_page-0001-removebg-preview.png" alt="Portrait of Muhammad Syahril" />
+          <span class="portrait-hint" aria-hidden="true" data-i18n="portrait.hover">Hover</span>
+        </div>
+      </figure>
+    </section>
+
+    <!-- ============ ABOUT ============
+       Empty on purpose — write your own paragraph here. Two or three
+       sentences read best at this measure; the section is sized so a
+       short paragraph does not leave a hole. -->
+    <section class="band band--about" id="about">
+      <h2 class="band-title" data-i18n="about.title">About</h2>
+      <div class="about-body">
+        <p data-i18n="about.body">Halo! Saya Syahril, mahasiswa Ilmu Komputer (Computer Science) yang memiliki minat mendalam
+          pada Artificial Intelligence, Computer Vision, serta Web &amp; Mobile Development.
+
+          Saya berfokus pada pengembangan solusi digital yang interaktif dan fungsional, mulai dari sistem deteksi bahasa
+          isyarat real-time berbasis Python &amp; MediaPipe, aplikasi web modern dengan Vue.js &amp; Node.js, hingga aplikasi
+          mobile menggunakan React Native / Expo. Saya selalu antusias untuk mempelajari teknologi baru, memperdalam
+          struktur data &amp; algoritma, serta terbuka untuk berbagai peluang kolaborasi proyek teknologi.</p>
+      </div>
+    </section>
+
+    <section class="band" id="education">
+      <h2 class="band-title" data-i18n="education.title">Education</h2>
+      <ol class="band-list" role="list">
+        <li class="band-row">
+          <span class="band-name" data-i18n="edu.cs">Computer Science</span>
+          <span class="band-org">BINUS University</span>
+          <span class="band-when" data-i18n="when.present">2024 - Present</span>
+        </li>
+        <li class="band-row">
+          <span class="band-name" data-i18n="edu.se">Software Engineering</span>
+          <span class="band-org">SMK Telkom Sandhy Putra Malang</span>
+          <span class="band-when">2021 - 2024</span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="projects" id="projects">
+      <h2 class="showcased-title" id="projectsTitle">
+        <span class="showcased-title-inner" data-i18n="projects.title">Showcased Projects</span>
+      </h2>
+      <div class="projects-track" id="projects-track"><!-- injected --></div>
+    </section>
+
+        <!-- ============ SKILLS ============
+         The orbit: two glowing rings with the skill icons circling them.
+         Moved here from skills.html so the whole story reads top to bottom
+         without leaving the page. script.js guards on #skStage, so the same
+         block works on either page. -->
+    <section class="band band--skills" id="skills">
+      <h2 class="band-title" data-i18n="skills.title">Skills</h2>
+
+      <div class="sk-stage" id="skStage" role="img"
+           aria-label="Skill icons orbiting. Inner ring: JavaScript, Python, C, Java, PHP, HTML and CSS. Outer ring: Vue, TypeScript, React Native, Node.js, Go, MySQL and Computer Vision.">
+
+        <div class="sk-core" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+              <linearGradient id="skGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#06B6D4" />
+                <stop offset="100%" stop-color="#9333EA" />
+              </linearGradient>
+            </defs>
+            <polyline points="16 18 22 12 16 6" stroke="url(#skGrad)" />
+            <polyline points="8 6 2 12 8 18" stroke="url(#skGrad)" />
+          </svg>
+        </div>
+
+        <div class="sk-ring" data-ring="inner" aria-hidden="true"
+             style="--sk-glow-1:rgba(6,182,212,.40);--sk-glow-2:rgba(6,182,212,.20);--sk-edge:rgba(6,182,212,.30);"></div>
+        <div class="sk-ring" data-ring="outer" aria-hidden="true"
+             style="--sk-glow-1:rgba(147,51,234,.40);--sk-glow-2:rgba(147,51,234,.20);--sk-edge:rgba(147,51,234,.30);--sk-delay:1.5s;"></div>
+
+        <!-- icons are injected by script.js from the SKILLS list -->
+      </div>
+
+      <div class="sk-list" id="skList" role="list"><!-- injected --></div>
+    </section>
+
+<section class="band" id="certificate">
+      <h2 class="band-title" data-i18n="certificate.title">Certificate</h2>
+      <ul class="band-list" role="list">
+        <li class="band-row">
+          <span class="band-name">Fundamentals of Deep Learning</span>
+          <span class="band-org">NVIDIA</span>
+          <span class="band-when">2026</span>
+        </li>
+        <li class="band-row">
+          <span class="band-name">Information Technology Spesialist in JavaScript</span>
+          <span class="band-org">Certiport - A Pearson VUE Business</span>
+          <span class="band-when">2023</span>
+        </li>
+        <li class="band-row">
+          <span class="band-name">Certificate of Competency Node.js & React.js  </span>
+          <span class="band-org">DOT Indonesia</span>
+          <span class="band-when">2023</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Spacer: grows to absorb the slack between the last section and the
+       footer, so the footer always sits on the document floor. -->
+    <div class="page-footer-gap" aria-hidden="true"></div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <span class="footer-note" data-i18n="footer.developed">Developed by me 💙</span>
+      <a class="footer-contact" href="contact.html" data-i18n="footer.contact">Contact</a>
+    </footer>
+
+  </main>
+
+  <!-- Lenis — smooth scroll (same library the reference site uses) -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

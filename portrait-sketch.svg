@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="600" height="750" role="img" aria-label="Line-art portrait of a person leaning on a railing">
+  <!--
+    PLACEHOLDER LINE-ART PORTRAIT
+    A minimalist contour sketch: a person standing, leaning casually with both
+    hands on a railing. Swap this file for your own drawing when you have one —
+    keep the same viewBox (600x750) and the two state layers stay aligned.
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.5"
+     stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- head (kept empty on purpose: the photo layer sits over this area) -->
+    <ellipse cx="300" cy="150" rx="62" ry="74" />
+    <!-- a couple of hair strokes for character -->
+    <path d="M244 132c8-38 34-56 58-56 30 0 52 22 56 60" />
+    <path d="M252 150c-2-22 4-40 12-52" />
+
+    <!-- neck + shoulders -->
+    <path d="M278 214v28M322 214v28" />
+    <path d="M262 246c10-16 26-24 38-24s28 8 38 24" />
+
+    <!-- torso: t-shirt -->
+    <path d="M236 264c-26 16-40 44-44 80l-8 92c-2 22 6 38 24 44" />
+    <path d="M364 264c26 16 40 44 44 80l8 92c2 22-6 38-24 44" />
+    <path d="M262 246l-26 18M338 246l26 18" />
+
+    <!-- shorts -->
+    <path d="M208 480h184l6 78-92 4-8-52-10 52-88-4z" />
+
+    <!-- legs -->
+    <path d="M228 562l-10 108M372 562l10 108" />
+
+    <!-- shoes -->
+    <path d="M218 670h-34v16h58c0-10-10-16-24-16z" />
+    <path d="M382 670h34v16h-58c0-10 10-16 24-16z" />
+
+    <!-- arms resting forward on the railing -->
+    <path d="M212 300c-14 34-22 68-20 96" />
+    <path d="M388 300c14 34 22 68 20 96" />
+
+    <!-- railing -->
+    <path d="M120 404h360" />
+    <path d="M150 404v346M450 404v346" />
+    <path d="M150 520h300" />
+  </g>
+</svg>

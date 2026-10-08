@@ -1,0 +1,1477 @@
+﻿/* ============================================================
+   Muhammad Syahril â€” portfolio
+   ------------------------------------------------------------
+   Design tokens harvested from the live site's compiled CSS:
+     --column-width: 20.73dvw (>=640px: min(9.55dvw,137px))
+     --gap-width:    2.13dvw (>=640px: min(1.38dvw,20px))
+     --margin-size:  5.33dvw (>=640px: min(6.94dvw,100px))
+     base bg #fff / #F4F3EC, text #000 / #221F21
+     fonts: DM Sans (ui) + Instrument Serif (display)
+
+   Layout figures below were measured off reference screenshots at a
+   1916px viewport (see the notes beside each rule).
+   ============================================================ */
+
+@font-face{font-family:'dmSans';src:url('font-7eff68d4e516be32-s.p.ttf') format('truetype');font-display:swap;font-weight:400;font-style:normal}
+@font-face{font-family:'instrumentSerif';src:url('font-d6bc26d6e10716f2-s.p.ttf') format('truetype');font-display:swap;font-weight:400;font-style:normal}
+@font-face{font-family:'instrumentSerif';src:url('font-d588735eebe34c64-s.p.ttf') format('truetype');font-display:swap;font-weight:400;font-style:italic}
+
+:root{
+  --column-width:20.73dvw;
+  --gap-width:2.13dvw;
+  --margin-size:5.33dvw;
+  --bg-color:#F4F3EC;
+  --text-color:#221F21;
+
+  --font-dm:'dmSans',ui-sans-serif,system-ui,sans-serif;
+  --font-instrument:'instrumentSerif',Georgia,serif;
+
+  /* vertical spacing between project titles (reference) */
+  --title-gap:25dvh;
+
+  /* vertical rhythm inside a page, following the reference's spacing scale
+     (sm < md < lg < xl < 2xl, all derived from the gutter) */
+  --spacing-sm:calc(var(--gap-width) * 1.5);
+  --spacing-md:calc(var(--gap-width) * 3);
+  --spacing-lg:calc(var(--gap-width) * 6);
+  --spacing-xl:calc(var(--gap-width) * 9);
+  --spacing-2xl:calc(var(--gap-width) * 14);
+
+  /* motion tokens â€” one place to tune the whole feel */
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-io:cubic-bezier(.65,0,.35,1);
+  --dur-fast:.5s;
+  --dur:.9s;
+  --dur-slow:1.4s;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-dm);
+  font-weight:400;
+  background:var(--bg-color);
+  color:var(--text-color);
+  line-height:1.5;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition:background-color 1.1s var(--ease-io),color 1.1s var(--ease-io);
+}
+body::-webkit-scrollbar{display:none}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+ul{list-style:none}
+h1,h2,h3{font-weight:400;font-size:inherit}
+.font-dm{font-family:var(--font-dm)}
+.font-instrument{font-family:var(--font-instrument)}
+
+@media (min-width:640px){
+  :root{
+    --column-width:min(9.55dvw,137px);
+    --gap-width:min(1.38dvw,20px);
+    --margin-size:min(6.94dvw,100px);
+  }
+}
+
+/* Desktop wrapper is 8 columns wide â€” the covers sit centred in 3 of those
+   columns while the titles hang off the right edge. */
+.page{
+  position:relative;z-index:1;
+  width:calc(var(--column-width) * 4 + var(--gap-width) * 3);
+  margin:0 auto;
+  display:flex;flex-direction:column;
+  min-height:100dvh;
+}
+@media (min-width:640px){
+  .page{width:calc(var(--column-width) * 8 + var(--gap-width) * 7)}
+}
+
+/* ============================================================
+   HEADER â€” "MSA" left, "Menu" right; hides on scroll-down
+   ============================================================ */
+.site-header{
+  position:fixed;top:0;left:50%;
+  width:calc(var(--column-width) * 4 + var(--gap-width) * 3);
+  padding-top:calc(var(--margin-size) * 0.5);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;z-index:60;
+  mix-blend-mode:difference;
+  transform:translate(-50%,0);
+  opacity:1;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out),
+             visibility 0s linear 0s;
+}
+@media (min-width:640px){
+  .site-header{width:calc(var(--column-width) * 8 + var(--gap-width) * 7)}
+}
+.site-header.is-hidden{
+  opacity:0;
+  transform:translate(-50%,-120%);
+  visibility:hidden;
+  transition:opacity .35s var(--ease-out),transform .45s var(--ease-out),
+             visibility 0s linear .45s;
+}
+
+.logo{
+  font-family:var(--font-instrument);
+  font-size:1.05rem;font-weight:700;letter-spacing:.02em;
+  color:#fff;
+}
+.menu-toggle{
+  font-family:var(--font-instrument);
+  font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;
+  color:#fff;padding:.25rem 0;
+  position:relative;
+}
+.menu-toggle-label{display:inline-block;position:relative;overflow:hidden;vertical-align:top}
+/* the label rolls up and the replacement rolls in from below */
+.menu-toggle-label::after{
+  content:attr(data-text);
+  position:absolute;left:0;top:100%;
+  transition:transform var(--dur-fast) var(--ease-out);
+}
+body.menu-open .menu-toggle-label::after{transform:translateY(-100%)}
+.menu-toggle-label{transform:translateY(0);transition:transform var(--dur-fast) var(--ease-out)}
+
+/* ============================================================
+   MENU OVERLAY
+   ============================================================ */
+.menu{
+  position:fixed;inset:0;z-index:50;
+  background:var(--bg-color);
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path var(--dur) var(--ease-io);
+  pointer-events:none;
+}
+.menu[hidden]{display:none}
+body.menu-open .menu{
+  clip-path:inset(0 0 0 0);
+  pointer-events:auto;
+}
+body.menu-open .page{pointer-events:none}
+body.menu-open .scroll-progress{opacity:0;transition:opacity .3s ease}
+
+.menu-inner{
+  position:absolute;inset:0;
+  padding:var(--margin-size);
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transform:translateY(24px);
+  transition:opacity .5s var(--ease-out),transform .6s var(--ease-out);
+}
+body.menu-open .menu-inner{opacity:1;transform:none;transition-delay:.15s}
+
+.menu-list{display:flex;flex-direction:column;align-items:flex-start;gap:.15em}
+.menu-item{
+  font-family:var(--font-instrument);
+  font-size:clamp(2.4rem,7.2vw,5.5rem);
+  line-height:1.06;
+  color:var(--text-color);
+  position:relative;
+  display:block;
+  overflow:hidden;
+}
+.menu-item span{
+  display:block;
+  transform:translateY(110%);
+  transition:transform .8s var(--ease-out);
+}
+body.menu-open .menu-item span{transform:translateY(0)}
+/* stagger each row in */
+body.menu-open .menu-item:nth-child(1) span{transition-delay:.18s}
+body.menu-open .menu-item:nth-child(2) span{transition-delay:.24s}
+body.menu-open .menu-item:nth-child(3) span{transition-delay:.30s}
+/* the menu has three rows; the last two original delays were removed with
+   the extra items â€” keeping them would be dead CSS tuned for a 5-row list */
+
+.menu-item::after{
+  content:'';position:absolute;left:0;bottom:.12em;
+  width:100%;height:1px;background:currentColor;
+  transform:scaleX(0);transform-origin:100% 50%;
+  transition:transform .6s var(--ease-out);
+}
+.menu-item:hover::after{transform:scaleX(1);transform-origin:0 50%}
+
+.menu-lang{
+  position:absolute;right:var(--margin-size);bottom:var(--margin-size);
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  opacity:0;transition:opacity .5s ease .4s;
+}
+body.menu-open .menu-lang{opacity:1}
+.lang{opacity:.45;transition:opacity .3s ease}
+.lang.is-active{opacity:1}
+.lang:hover{opacity:1}
+.lang-sep{opacity:.45}
+
+/* ============================================================
+   HERO
+   ------------------------------------------------------------
+   Measured at 1916px: portrait frame 463x617 starting at y~15,
+   intro baselines at y=264 / 336 / 408 (72px rhythm), so the two
+   columns are top-aligned rather than centred on each other.
+   ============================================================ */
+.hero{
+  min-height:100dvh;
+  display:grid;
+  grid-template-columns:1fr;
+  align-items:start;
+  gap:4rem;
+  padding-top:calc(var(--margin-size) * 0.15);
+  padding-bottom:calc(var(--margin-size) * 1.4);
+}
+@media (min-width:900px){
+  /* 723 + 50 + 463 = 1236 = the 8-column page width */
+  .hero{
+    grid-template-columns:minmax(0,723px) minmax(0,463px);
+    gap:50px;
+  }
+  .hero-text{padding-top:16vw}
+}
+
+/* cap height 45px at 1916 -> 47px font; 72px line-height is an independent
+   rhythm in the reference, not a ratio of the font size */
+.hero-intro{
+  font-family:var(--font-instrument);
+  font-size:clamp(1.3rem,2.46vw,3rem);
+  /* a proportional rhythm that scales with the font instead of a fixed 72px
+     line (which left huge gaps between lines on small screens) */
+  line-height:1.5;
+  max-width:none;
+}
+@media (min-width:900px){
+  /* restore the reference's roomy 72px rhythm on desktop where the font is big */
+  .hero-intro{line-height:72px}
+}
+
+/* word-by-word reveal: dimmed ink that fills to full contrast */
+.hero-intro .w{
+  display:inline-block;
+  color:color-mix(in srgb, var(--text-color) 45%, transparent);
+  transform:translateY(.5em);
+  opacity:0;
+  transition:color .6s var(--ease-out),transform .9s var(--ease-out),
+             opacity .7s var(--ease-out);
+}
+.hero-intro .w.in{color:var(--text-color);transform:none;opacity:1}
+.hero-intro .w.accent{color:var(--text-color)}
+@supports (animation-timeline: view()) {
+  @keyframes wordUp { from{opacity:0;transform:translateY(.5em)} to{opacity:1;transform:none} }
+  .hero-intro .w{
+    animation:wordUp cubic-bezier(.22,1,.36,1) both;
+    animation-timeline:view();
+    animation-range:entry 0% entry 100%;
+  }
+}
+
+/* ---- portrait: sketch â‡„ photo on hover ---------------------------- */
+.portrait{
+  position:relative;
+  justify-self:end;
+  align-self:start;
+  width:100%;
+  max-width:400px;          /* slightly smaller than reference 463px */
+  transform:translateY(12vw); /* nudge down to sit lower in the hero */
+  aspect-ratio:3/4;
+  /* locked to the default palette so the portrait never shifts with the
+     scroll-driven background colour */
+  border:1px solid color-mix(in srgb, #221F21 22%, transparent);
+  overflow:hidden;
+  margin:0;
+  cursor:pointer;
+  background:color-mix(in srgb, #F4F3EC 88%, #221F21);
+}
+.portrait-inner{position:absolute;inset:0}
+.portrait-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the sketch layer is no longer used — the photo shows at all times */
+.portrait-sketch{display:none}
+/* photo: greyscale by default, true colour on hover/focus */
+.portrait-photo{
+  opacity:1;
+  filter:grayscale(1);
+  transform:scale(1);
+  transition:filter .7s var(--ease-io),transform 1.2s var(--ease-out);
+}
+.portrait:hover .portrait-photo,
+.portrait:focus-visible .portrait-photo,
+.portrait.is-revealed .portrait-photo{filter:grayscale(0);transform:scale(1.03)}
+
+.portrait-hint{
+  position:absolute;left:50%;bottom:1rem;
+  transform:translateX(-50%);
+  font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  color:color-mix(in srgb, #221F21 55%, transparent);
+  opacity:1;transition:opacity .4s ease;
+  pointer-events:none;
+}
+.portrait:hover .portrait-hint,
+.portrait:focus-visible .portrait-hint,
+.portrait.is-revealed .portrait-hint{opacity:0}
+.portrait:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+
+/* ============================================================
+   PROJECTS
+   ------------------------------------------------------------
+   "Showcased Projects" is a sticky caption: large on entry, parks at the
+   top, eases down to ~0.78 once locked. Cover 451px wide, flush left in
+   the grid; title ~86px hanging off the right edge with a â†˜ arrow.
+   ============================================================ */
+.projects{
+  position:relative;
+  padding-top:16dvh;
+  padding-bottom:0;
+}
+.showcased-title{
+  position:sticky;
+  top:calc(var(--margin-size) * 1.1);
+  z-index:5;
+  margin:0 0 2vw;                   /* gap between heading and first project */
+  transform-origin:left top;
+}
+.showcased-title-inner{
+  display:block;
+  font-family:var(--font-instrument);
+  font-size:clamp(2.3rem,4.6vw,5.6rem);    /* slightly smaller heading */
+  line-height:1.02;
+  letter-spacing:-.02em;
+  color:var(--text-color);
+}
+
+@supports (animation-timeline: view()) {
+  @keyframes titleSettle {
+    from { transform:scale(1);  opacity:1; }
+    to   { transform:scale(.6); opacity:1; }
+  }
+  .showcased-title{
+    animation:titleSettle linear both;
+    animation-timeline:view();
+    animation-range-start:cover 0%;
+    animation-range-end:contain 12%;
+  }
+}
+
+/* STICKY-STORY layout (matches the reference):
+   - left: one photo panel pinned at the focus line; its covers cross-fade
+   - right: the list of titles scrolls past, spaced ~25dvh apart like the
+     reference. The title crossing the focus line is active. */
+.projects-track{
+  position:relative;
+  display:grid;
+  grid-template-columns:calc(var(--column-width) * 3 + var(--gap-width) * 2) 1fr;
+  gap:var(--gap-width);
+  align-items:start;
+}
+
+/* ---- left: the sticky photo panel ---- */
+.col-photos{
+  position:sticky;
+  top:0;
+  height:100dvh;
+  display:flex;
+  align-items:center;      /* photo sits on the focus line (viewport centre) */
+}
+/* 16:9 box, vertically centred in the 100dvh sticky panel. A full-height stage
+   stretched these portrait screenshots past their own aspect ratio and cropped
+   them badly; 16/9 keeps every cover whole. */
+.photo-stage{width:100%}
+.project-photo{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:#f4f3ec;
+}
+/* every cover stacked; only the active one is shown (cross-fade).
+   `contain` shows each cover whole and centred so nothing is cropped or
+   looks off-centre when a thumbnail isn't exactly 16:9. */
+.stage-cover{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:contain;
+  object-position:center;
+  opacity:0;
+  transform:scale(1.04);
+  transition:opacity .7s var(--ease-io),transform 1.2s var(--ease-out);
+}
+.stage-cover.is-active{opacity:1;transform:scale(1)}
+
+/* ---- right: the scrolling list of titles ---- */
+.col-names{
+  display:flex;
+  flex-direction:column;
+  /* lead/trail so the first and last titles can reach the focus line */
+  padding:calc(50dvh - var(--title-gap) / 2) 0;
+}
+.slot-name{
+  min-height:var(--title-gap);
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+}
+
+/* ---- name (small, right-aligned) ---- */
+.pj-label{
+  display:flex;flex-wrap:wrap;
+  align-items:baseline;justify-content:flex-end;
+  column-gap:1.1rem;row-gap:.2rem;
+  text-align:right;
+  pointer-events:auto;cursor:pointer;
+  transition:transform .5s var(--ease-out);
+}
+.slot-name.is-active .pj-label{transform:translateX(-1.2rem)}
+@media (min-width:1024px){.slot-name.is-active .pj-label{transform:translateX(-2rem)}}
+.pj-label:focus-visible{outline:2px solid var(--text-color);outline-offset:6px;border-radius:2px}
+
+.project-name{
+  font-family:var(--font-instrument);
+  font-size:clamp(2.1rem,4.48vw,5.4rem);
+  line-height:1.04;
+  color:var(--text-color);
+  transition:opacity .45s ease;
+  opacity:.3;
+}
+.slot-name.is-active .project-name{opacity:1}
+
+/* each letter is its own box so it can ride a wave */
+.project-name .ch{
+  display:inline-block;
+  will-change:transform;
+}
+/* slow mini wave on hover: a smooth, constant-speed rise-and-fall that
+   ripples letter by letter. The negative, --i-based delay offsets each
+   letter's phase so the wave is already in motion at a steady rate the
+   instant you hover (no start-up lag, no hitch when it loops). */
+@keyframes letterWave{
+  0%  {transform:translateY(0)}
+  50% {transform:translateY(-0.22em)}
+  100%{transform:translateY(0)}
+}
+.pj-label:hover .project-name .ch,
+.pj-label:focus-visible .project-name .ch{
+  /* springy, supple easing + a little more lift = a more elastic wave */
+  animation:letterWave 2.2s cubic-bezier(.34,1.56,.64,1) infinite;
+  animation-delay:calc(var(--i, 0) * -0.12s);
+}
+
+/* Type + year, on its own line UNDER the title.
+
+   The label is a right-aligned flex row, so this caption has to occupy exactly
+   the same measure as the title block above it â€” otherwise flex-basis:100%
+   stretches it across the whole column and the text drifts to the far left,
+   detached from the title it belongs to. Sizing it to the content and letting
+   the row's own justify-content push it right keeps the caption's right edge
+   flush with the title's right edge. */
+.pj-meta{
+  order:3;
+  /* own line below the title: flex-basis:100% forces a wrap onto a new line */
+  flex:0 0 100%;
+  margin-top:.35rem;
+  /* but the BOX must not stretch, or the glyphs sit at the far left of it.
+     width:auto + flex-basis:auto keeps the item at its text width while the
+     full basis still forces the wrap. */
+  width:fit-content;
+  /* The caption's own box spans the column, so `text-align` alone is not enough
+     once it is a flex container. margin-left:auto on a full-basis item does
+     nothing; what actually right-aligns it is to keep the item at its natural
+     width and let the parent's justify-content:flex-end push it over. */
+  width:auto;
+  margin-left:auto;
+  text-align:right;
+  font-size:.7rem;letter-spacing:.08em;
+  color:var(--pj-fg,var(--text-color));
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out);
+  white-space:nowrap;
+}
+.slot-name.is-active .pj-meta{opacity:.7;transform:none}
+
+/* the diagonal â†˜ arrow, inline after the name */
+.pj-arrow{
+  order:2;
+  flex-shrink:0;
+  /* match the title's size so the arrow is as large as the project name */
+  font-size:clamp(2.1rem,4.48vw,5.4rem);
+  width:1em;height:1em;
+  /* centre the arrow on the title's text instead of its baseline */
+  align-self:center;
+  color:var(--text-color);
+  opacity:0;
+  /* hidden state: tucked up-left, so it slides out toward the south-east */
+  transform:translate(-.22em,-.22em);
+  transition:transform .55s var(--ease-out),opacity .45s ease;
+  pointer-events:none;
+}
+/* appears on the active title AND on hover/focus, sliding to the south-east.
+   The small +.08em Y nudge optically centres it on the serif title. */
+.slot-name.is-active .pj-arrow,
+.pj-label:hover .pj-arrow,
+.pj-label:focus-visible .pj-arrow{opacity:1;transform:translateY(.08em)}
+.pj-label:hover .pj-arrow{transform:translate(.1em,.18em)}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.page-footer-gap{flex:1 1 auto;min-height:6dvh}
+.site-footer{
+  flex:0 0 auto;
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding-top:4dvh;
+  padding-bottom:var(--margin-size);
+}
+/* very small screens: stack the note above the contact link so neither
+   gets squeezed */
+@media (max-width:420px){
+  .site-footer{flex-direction:column;align-items:flex-start;gap:.6rem}
+}
+.footer-note{
+  font-family:var(--font-dm);
+  font-size:.8rem;
+  color:color-mix(in srgb, var(--text-color) 70%, transparent);
+}
+.footer-contact{
+  position:relative;
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--text-color);
+  padding-bottom:3px;
+}
+.footer-contact::after{
+  content:'';position:absolute;left:100%;bottom:0;
+  width:0;height:1px;background:currentColor;
+  transition:width .5s var(--ease-out),left .5s var(--ease-out);
+}
+.footer-contact:hover::after{left:0;width:100%}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+.scroll-progress{
+  position:fixed;top:0;left:0;right:0;
+  height:2px;z-index:80;
+  background:var(--text-color);
+  transform:scaleX(0);
+  transform-origin:left center;
+  pointer-events:none;
+}
+@supports (animation-timeline: scroll()) {
+  @keyframes growBar { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+  .scroll-progress{
+    animation:growBar linear both;
+    animation-timeline:scroll(root block);
+  }
+}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity var(--dur-slow) var(--ease-out),
+             transform var(--dur-slow) var(--ease-out);
+}
+.reveal.in{opacity:1;transform:none}
+@supports (animation-timeline: view()) {
+  @keyframes revealUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+  .reveal{
+    animation:revealUp cubic-bezier(.22,1,.36,1) both;
+    animation-timeline:view();
+    animation-range:entry 0% entry 90%;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width:899px){
+  .hero{
+    grid-template-columns:1fr;
+    gap:3rem;
+    padding-top:calc(var(--margin-size) * 2.4);
+  }
+  .portrait{width:min(100%,340px);justify-self:center;transform:none}
+}
+
+@media (max-width:639px){
+  .page{width:calc(100% - 2rem)}
+  .site-header{width:calc(100% - 2rem)}
+  .logo{font-size:.95rem}
+  .menu-toggle{font-size:.7rem}
+  .menu-item{font-size:clamp(2rem,11vw,3.2rem)}
+  .menu-inner{padding:1.5rem}
+  .menu-lang{right:1.5rem;bottom:1.5rem}
+  .projects{padding-top:12dvh}
+  .showcased-title{top:calc(var(--margin-size) * 1.2);margin-bottom:5vw}
+}
+
+/* Showcased Projects: the two-column sticky-story only fits on a wide screen.
+   Below 900px (tablets and phones) the photo column would be squeezed to a
+   sliver, so the whole thing restructures into a single stacked column —
+   photo pinned near the top, titles flowing beneath it. This runs up to 899px
+   so the layout never breaks on tablets, matching the hero's own breakpoint. */
+@media (max-width:899px){
+  :root{--title-gap:24dvh}
+  .projects-track{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    /* the desktop rule sets align-items:start; in a column flexbox that is the
+       horizontal axis, which collapsed .col-photos to zero width */
+    align-items:stretch;
+  }
+  .col-photos{
+    position:sticky;
+    top:12dvh;
+    height:auto;
+    margin-bottom:4dvh;
+    display:block;
+  }
+  .col-names{padding:8dvh 0 20dvh}
+  .slot-name{justify-content:flex-start}
+  .project-name{font-size:clamp(1.8rem,6vw,3rem);line-height:1.06}
+  .pj-meta{display:none}
+  .pj-arrow{font-size:clamp(1.8rem,6vw,3rem);width:1em;height:1em}
+}
+@media (max-width:639px){
+  :root{--title-gap:16dvh}
+  /* On small phones the pinned photo chases the flowing titles and the two
+     overlap. Let the photo scroll normally (static), sitting above the list,
+     and give the titles a modest top gap so the first one starts clear of it. */
+  .col-photos{
+    position:static;
+    height:auto;
+    margin-bottom:3dvh;
+  }
+  .col-names{padding:0 0 10dvh}
+  .slot-name{min-height:auto;padding:1.1rem 0}
+  .project-name{font-size:clamp(1.5rem,7vw,2.2rem)}
+  .pj-arrow{font-size:clamp(1.5rem,7vw,2.2rem)}
+}
+
+/* ============================================================
+   MOTION PREFERENCES / CAPTURE HELPERS
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  /* Scroll-driven animations ignore animation-duration, so the only way to
+     switch them off is to remove the animation entirely. */
+  *,*::before,*::after{
+    transition-duration:.01ms !important;
+    animation:none !important;
+  }
+  .reveal,.hero-intro .w{opacity:1;transform:none}
+  .stage-cover.is-active{opacity:1;transform:none}
+  .showcased-title{transform:none;opacity:1}
+  .scroll-progress{display:none}
+  /* reduced motion: keep the photo in colour, no greyscale fade */
+  .portrait-photo{opacity:1;transform:none;filter:none}
+}
+
+html.no-motion *{transition:none !important;animation:none !important}
+
+/* ============================================================
+   CONTACT PAGE
+   ------------------------------------------------------------
+   Structure taken from the original bundle:
+     Â· wrapper   w-dvw h-dvh flex justify-center items-center
+     Â· headline  one centred line, driven by the pointer
+     Â· links     absolute bottom, space-between, each a two-row stack
+       where row 1 slides up and row 2 (the real destination) comes in
+   The original renders the headline with a WebGL SDF shader
+   (uReveal / uDelta). Here two DOM layers reproduce the read: a blurred
+   duplicate offsets toward the pointer, the crisp layer stays put, and the
+   result is masked to a soft-edged window â€” the same visual, no WebGL.
+   ============================================================ */
+.sr-only{
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);
+  white-space:nowrap;border:0;
+}
+
+.contact-stage{
+  position:relative;
+  width:100vw;
+  height:100dvh;
+  margin-left:calc(50% - 50vw);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+
+.contact-headline{
+  position:relative;
+  font-family:var(--font-instrument);
+  /* the original is text-3xl on mobile and scales up to fill the width on
+     desktop; 5.19vw gives a ~100px line at 1919, matching the reference's
+     96px cap height */
+  font-size:clamp(1.6rem,5.19vw,6.3rem);
+  line-height:1.05;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+  will-change:transform;
+  text-align:center;
+}
+/* very small screens: let the headline wrap instead of being clipped by the
+   stage's overflow:hidden, and drop the pointer-follow nowrap constraint */
+@media (max-width:480px){
+  .contact-headline{white-space:normal;max-width:calc(100% - 2rem)}
+}
+
+/* both layers are the same text; the glow one is offset by the pointer and
+   blurred, which reads as the shader's soft reveal edge */
+.contact-glow,
+.contact-text{
+  display:block;
+  color:var(--text-color);
+}
+.contact-glow{
+  position:absolute;
+  left:0;top:0;
+  width:100%;
+  opacity:.55;
+  filter:blur(14px);
+  transform:translate3d(var(--gx,0px),var(--gy,0px),0);
+  will-change:transform;
+  transition:opacity .4s var(--ease-out);
+  pointer-events:none;
+}
+.contact-text{
+  position:relative;
+  transform:translate3d(var(--tx,0px),var(--ty,0px),0);
+  will-change:transform;
+}
+
+/* once the address is copied the line settles and stops following */
+.contact-stage.is-copied .contact-glow{opacity:0}
+.contact-stage.is-copied .contact-headline{animation:copiedPulse .6s var(--ease-out)}
+@keyframes copiedPulse{
+  0%  {transform:scale(1)}
+  40% {transform:scale(1.025)}
+  100%{transform:scale(1)}
+}
+
+/* ============================================================
+   CONTACT LINKS
+   Two rows per link. Row A is the label, row B the destination. Hovering
+   slides A up out of the clipped box and brings B up into it.
+
+   Mobile-first: a plain vertical stack. From 768px up the row becomes a
+   single centred line. Keeping the two states in separate blocks (base +
+   one media query) avoids the two rule sets fighting each other.
+   ============================================================ */
+.contact-bar{
+  position:fixed;
+  left:50%;transform:translateX(-50%);
+  bottom:1.5rem;
+  width:calc(100% - 3rem);
+  display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;
+  z-index:5;
+}
+
+/* Each link is a fixed-width slot with both strings centred inside it.
+
+   Fixed, not content-sized, for two reasons:
+
+     1. Even pitch. With content-sized slots, Mail's box was 328px wide (it
+        holds the email address) while GitHub's was 118px, so the four labels
+        sat on an uneven pitch even when the boxes were evenly spaced â€” which
+        is what "make the gaps symmetric" is about.
+     2. No clipping. A content-sized box plus overflow:hidden cut the last
+        glyph off "LinkedIn"/"Instagram" whenever the label was wider than its
+        hover text.
+
+   An over-long string is centred on the slot and clipped symmetrically, and
+   the clip is released on hover so the full email / full name can show. */
+.c-link{
+  position:relative;
+  width:var(--c-link-slot,11.5rem);
+  height:1.5rem;              /* clips the sliding rows */
+  overflow:hidden;
+}
+.c-link-row,
+.c-link-ghost{
+  position:absolute;
+  top:0;left:50%;
+  transform:translate(-50%,0);
+  font-family:var(--font-dm);
+  font-size:1.083rem;
+  line-height:1.5rem;
+  text-transform:uppercase;
+  white-space:nowrap;
+  text-align:center;
+}
+.c-link-ghost{visibility:hidden;pointer-events:none;user-select:none}
+.c-link-row{
+  color:var(--text-color);
+  transition:transform .25s var(--ease-out),opacity .25s var(--ease-out);
+}
+.c-link-row-a{transform:translate(-50%,0);opacity:1}
+.c-link-row-b{transform:translate(-50%,100%);opacity:0;text-decoration:underline}
+
+/* Bigger click target for the real links (LinkedIn, Instagram, GitHub).
+   Those rows are <a> elements; Mail is a <button>, so this never touches
+   Mail. The ::after fills the whole slot (width 11.5rem) so the entire slot
+   around the label is clickable, not just the text. It can't overflow the
+   slot (which clips for the slide animation), so the layout is untouched. */
+a.c-link-row-a::after{
+  content:'';
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:var(--c-link-slot,11.5rem);
+  height:1.5rem;
+}
+/* also let the whole slot that holds a real link show the pointer cursor */
+.c-link:has(a.c-link-row-a){cursor:pointer}
+
+/* Release the clip while a row is revealed. Safe because row A has faded to
+   opacity 0 and row B sits vertically inside the slot, so only the HORIZONTAL
+   overflow escapes â€” which is exactly the string we want to show. The clip
+   returns when the hover ends, so both rows clip again as they slide. */
+.c-link:hover,
+.c-link:focus-within,
+.c-link.is-open{overflow:visible}
+
+.c-link:hover .c-link-row-a,
+.c-link:focus-within .c-link-row-a,
+.c-link.is-open .c-link-row-a{transform:translate(-50%,-100%);opacity:0}
+.c-link:hover .c-link-row-b,
+.c-link:focus-within .c-link-row-b,
+.c-link.is-open .c-link-row-b{transform:translate(-50%,0);opacity:1}
+
+/* Only one link is hovered at a time, so the two outer links reveal their
+   long string INWARD â€” anchored to the slot's outer edge instead of centred.
+   A centred 328px email on the leftmost link would hang off the viewport on a
+   narrow screen; growing towards the middle can never leave the page. */
+.contact-bar > .c-link[data-anchor="left"]:hover .c-link-row-b,
+.contact-bar > .c-link[data-anchor="left"]:focus-within .c-link-row-b,
+.contact-bar > .c-link[data-anchor="left"].is-open .c-link-row-b{
+  /* centred: the string grows equally both ways, so it can never be pushed
+     off one edge. Right-aligning cleared LinkedIn at 1916px but took the email
+     off-screen below ~1280px; centring trades a little clearance for safety. */
+  left:50%;transform:translate(-50%,0)
+}
+.contact-bar > .c-link[data-anchor="left"]:hover .c-link-row-a,
+.contact-bar > .c-link[data-anchor="left"]:focus-within .c-link-row-a,
+.contact-bar > .c-link[data-anchor="left"].is-open .c-link-row-a{left:0;transform:translate(0,-100%)}
+.contact-bar > .c-link[data-anchor="right"]:hover .c-link-row-b,
+.contact-bar > .c-link[data-anchor="right"]:focus-within .c-link-row-b,
+.contact-bar > .c-link[data-anchor="right"].is-open .c-link-row-b{left:auto;right:0;transform:translate(0,0)}
+.contact-bar > .c-link[data-anchor="right"]:hover .c-link-row-a,
+.contact-bar > .c-link[data-anchor="right"]:focus-within .c-link-row-a,
+.contact-bar > .c-link[data-anchor="right"].is-open .c-link-row-a{left:auto;right:0;transform:translate(0,-100%)}
+
+@media (max-width:767px){
+  /* On phones the fixed bottom bar fought the full-height headline, so the
+     top links (Mail…) got clipped off the bottom edge. Drop the fixed
+     positioning: the headline takes a shorter stage and the links flow in
+     the normal document below it, so all four are always reachable. */
+  .contact-stage{height:auto;min-height:60dvh;padding:18dvh 1rem 2rem}
+  .contact-bar{
+    position:static;
+    transform:none;
+    left:auto;bottom:auto;
+    width:calc(100% - 2rem);
+    margin:0 auto 3rem;
+    gap:1.25rem;
+    align-items:center;
+  }
+  .c-link{
+    /* a real width (not auto) so the slot can't collapse when its rows are
+       absolutely positioned; full line, label centred inside */
+    width:100%;
+    max-width:22rem;
+    margin-inline:auto;
+    height:1.6rem;
+  }
+  .c-link-row,.c-link-ghost{font-size:.95rem;line-height:1.6rem;text-align:center}
+  /* the slot has a real width now, so centre the label (and the revealed
+     destination) within it */
+  .c-link-row,.c-link-ghost{left:50%;transform:translate(-50%,0)}
+  .c-link-row-a{transform:translate(-50%,0)}
+  .c-link-row-b{transform:translate(-50%,100%)}
+  .c-link:hover .c-link-row-a,
+  .c-link:focus-within .c-link-row-a,
+  .c-link.is-open .c-link-row-a{transform:translate(-50%,-100%)}
+  .c-link:hover .c-link-row-b,
+  .c-link:focus-within .c-link-row-b,
+  .c-link.is-open .c-link-row-b{transform:translate(-50%,0)}
+}
+
+@media (min-width:768px){
+  .contact-bar{
+    bottom:2.5rem;
+    width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+    max-width:calc(100% - 6rem);
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    /* One uniform gap, with a hard floor.
+
+       Flex guarantees every inter-item gap is identical â€” `space-evenly` does
+       NOT, because it also weights by item width, and these items differ a lot
+       (Mail's slot holds a 328px email, GitHub's 118px).
+
+       One uniform value, not a floor: only a single link is hovered at a
+       time, so the revealed strings never have to coexist side by side. The
+       two outer links reveal inward (see above), which is what keeps a 328px
+       email address from leaving the viewport on a narrow screen. */
+    gap:clamp(2rem,5vw,5.5rem);
+  }
+}
+
+/* Between 768px and ~1180px there is not enough room for a 328px email
+   centred on the first slot: it hangs off the left edge and crowds LinkedIn.
+   Shrinking the revealed string in that band keeps it fully on screen and
+   still legible, and it reverts to full size on wide screens. */
+@media (min-width:768px) and (max-width:1180px){
+  .c-link{--c-link-slot:9rem}
+  .c-link-row,.c-link-ghost{font-size:.72rem;line-height:1.5rem}
+  .contact-bar{gap:clamp(1.25rem,3.5vw,2.75rem)}
+}
+
+/* ============================================================
+   PROJECT DETAIL PAGE
+   Grid is the same 12-column system the rest of the site uses:
+   --column-width 20.73dvw, --gap-width 2.13dvw, so 8 cols = the
+   standard content width and 6 cols = the reading measure.
+   ============================================================ */
+.pj-page .pj-main{
+  width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+  max-width:calc(100% - 2 * var(--margin-size));
+  margin-inline:auto;
+  padding-top:var(--margin-size);
+}
+.pj-footer{
+  width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+  max-width:calc(100% - 2 * var(--margin-size));
+  margin:0 auto var(--margin-size);
+}
+
+/* ---- gallery ----
+   The reference sizes the cover at 6 of the 12 columns (w-col-6), not the full
+   8-column content width: a full-width cover pushed the title below the fold. */
+.pj-gallery{display:flex;flex-direction:column;gap:var(--gap-width)}
+.pj-shot{margin:0}
+.pj-shot img{
+  display:block;width:100%;height:auto;
+  border-radius:2px;
+}
+.pj-gallery:not(.pj-gallery--extra) .pj-shot{
+  width:calc(var(--column-width) * 6 + var(--gap-width) * 5);
+  max-width:100%;
+}
+/* the cover keeps the reference's 16:9 box even for portrait screenshots */
+.pj-shot--cover img{aspect-ratio:16/9;object-fit:cover;width:100%}
+/* the supporting shots sit at a narrower measure so they read as evidence
+   rather than competing with the title */
+.pj-gallery--extra{
+  width:calc(var(--column-width) * 6 + var(--gap-width) * 5);
+  max-width:100%;
+  margin:var(--spacing-lg) auto 0;
+}
+.pj-gallery--extra .pj-shot img{border-radius:2px}
+
+/* ---- title ---- */
+.pj-h1{
+  font-family:var(--font-instrument);
+  font-size:clamp(2.5rem,3.34vw,4rem);
+  line-height:1;
+  margin:var(--spacing-md) 0 0;
+  color:var(--text-color);
+}
+
+/* ---- type / year on the DETAIL page ----
+   NOTE: this used to be `.pj-meta`, the same class the home project's small
+   caption uses. Two rules for one class on one page meant the detail page's
+   `display:flex; justify-content:space-between` silently overrode the home
+   caption's alignment, dragging its text back to the left. Scoped to
+   .pj-page now so the two can never collide again. */
+.pj-page .pj-meta{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-top:var(--spacing-sm);
+}
+.pj-type,.pj-year{
+  font-family:var(--font-instrument);
+  font-style:italic;
+  font-size:clamp(1.25rem,1.67vw,2rem);
+  line-height:1.2;
+  margin:0;
+  color:var(--text-color);
+}
+
+/* ---- description: 6 columns, centred, like the reference ---- */
+.pj-desc{
+  width:calc(var(--column-width) * 6 + var(--gap-width) * 5);
+  max-width:100%;
+  margin:var(--spacing-lg) auto 0;
+  display:flex;flex-direction:column;gap:1em;
+}
+.pj-desc p{
+  margin:0;
+  font-family:var(--font-instrument);
+  font-size:clamp(1.1rem,1.15vw,1.4rem);
+  line-height:1.45;
+  color:var(--text-color);
+}
+
+/* ---- see next project ----
+   130dvh wrapper with the panel sticky to the top, so it is pinned through the
+   first 30dvh of the wrapper and then settles â€” the reference behaviour. */
+.pj-next-wrap{height:130dvh}
+.pj-next{
+  position:sticky;
+  top:0;
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-block:var(--spacing-md) var(--margin-size);
+}
+/* ---- the progress bar ----
+   A full-width square-cornered bar above the "See next project..." panel. The
+   fill is scaled on the X axis from the left edge, which keeps the transform
+   on the compositor instead of animating width. */
+.pj-progress{
+  position:relative;
+  /* a long, chunky loading bar spanning most of the width */
+  width:100%;
+  height:4px;
+  border-radius:2px;
+  margin-bottom:var(--spacing-md);
+  /* the track: same ink at low alpha, so the empty part still reads as a line */
+  background:color-mix(in srgb, var(--text-color) 18%, transparent);
+  overflow:hidden;
+}
+.pj-progress-fill{
+  position:absolute;inset:0;
+  background:currentColor;
+  opacity:1;
+  transform-origin:left center;
+  transform:scaleX(0);
+  will-change:transform;
+  /* The fill is written every frame from the scroll position, so it must NOT be
+     transitioned: a transition here would lag one frame behind the scroll and
+     the easing would compound with Lenis's own easing. The glide comes from
+     Lenis, not from this property. */
+  transition:none;
+}
+/* a soft travelling sheen so the bar reads as "loading" while it fills */
+.pj-progress-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, #fff 55%, transparent) 50%,
+    transparent 100%);
+  transform:translateX(-100%);
+  animation:pjLoadingSheen 1.6s linear infinite;
+}
+@keyframes pjLoadingSheen{
+  from{transform:translateX(-100%)}
+  to  {transform:translateX(100%)}
+}
+/* Under reduced motion Lenis never starts, so the bar tracks the native
+   scroll event instead and simply steps between values â€” which is the point
+   of the preference. Nothing to override here. */
+.pj-next-label{
+  font-family:var(--font-instrument);
+  font-style:italic;
+  font-size:clamp(1.25rem,1.67vw,2rem);
+  margin:0 0 var(--spacing-md);
+  color:var(--text-color);
+}
+.pj-next-row{
+  display:flex;align-items:flex-end;gap:var(--gap-width);
+}
+.pj-next-shot{margin:0;width:calc(var(--column-width) * 3 + var(--gap-width) * 2);flex:none}
+.pj-next-shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.pj-next-name{
+  font-family:var(--font-instrument);
+  font-style:italic;
+  font-size:clamp(3rem,4.17vw,5rem);
+  line-height:.9;
+  color:var(--text-color);
+  text-decoration:none;
+  transition:transform .3s var(--ease-out);
+}
+.pj-next-name:hover{transform:translateX(1.2rem)}
+
+@media (max-width:639px){
+  .pj-desc{width:100%}
+  .pj-next-row{flex-direction:column-reverse;align-items:flex-start}
+  .pj-next-shot{width:100%}
+  .pj-next-wrap{height:110dvh}
+}
+/* ============================================================
+   SKILLS PAGE â€” orbiting skill icons
+   ------------------------------------------------------------
+   Ported to vanilla from a React + TypeScript component. The
+   original drove the orbits with a requestAnimationFrame loop
+   over a React `time` state; here the same maths runs in one rAF
+   loop that writes --angle custom properties, so the compositor
+   does the transform and the JS only touches style properties.
+
+   Structure mirrors the original:
+     Â· two glowing orbit paths (inner cyan r100, outer purple r180)
+     Â· 8 skill icons, 4 inner + 4 outer, phase-shifted a quarter
+       turn apart so they never stack
+     Â· hover pauses the whole system, scales the icon, shows a label
+   ============================================================ */
+
+/* ---- page shell ---- */
+.sk-page .sk-main{
+  width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+  max-width:calc(100% - 2 * var(--margin-size));
+  margin-inline:auto;
+  padding-block:var(--margin-size);
+}
+.sk-footer{
+  width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+  max-width:calc(100% - 2 * var(--margin-size));
+  margin:0 auto var(--margin-size);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.sk-footer a{
+  font-family:var(--font-dm);
+  font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-color);text-decoration:none;
+  transition:opacity .3s ease;
+}
+.sk-footer a:hover{opacity:.6}
+
+/* ---- heading ---- */
+.sk-title{
+  font-family:var(--font-instrument);
+  font-size:clamp(2.6rem,5.34vw,6.4rem);
+  line-height:1;margin:0;
+  color:var(--text-color);
+}
+.sk-sub{
+  margin:.6rem 0 0;
+  max-width:34ch;
+  font-family:var(--font-dm);
+  font-size:.85rem;line-height:1.5;
+  color:var(--text-color);opacity:.6;
+}
+
+/* ---- orbit stage ---- */
+.sk-stage{
+  position:relative;
+  /* The outer orbit is a 180px radius, so the stage needs ~430px to hold it
+     with breathing room. Sizing it from the content width instead would make
+     a 1236px square â€” far taller than the viewport, pushing the list below it
+     out of reach. */
+  width:min(100%, 430px);
+  margin:var(--spacing-xl) auto 0;
+  aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---- orbit rings ---- */
+.sk-ring{
+  position:absolute;
+  top:50%;left:50%;
+  border-radius:50%;
+  pointer-events:none;
+  translate:-50% -50%;
+}
+.sk-ring::before{           /* soft glow, breathes */
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,
+    transparent 30%,
+    var(--sk-glow-2) 70%,
+    var(--sk-glow-1) 100%);
+  box-shadow:0 0 60px var(--sk-glow-1),
+             inset 0 0 60px var(--sk-glow-2);
+  animation:skPulse 4s ease-in-out infinite;
+  animation-delay:var(--sk-delay,0s);
+}
+.sk-ring::after{            /* crisp ring for depth */
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:1px solid var(--sk-edge);
+  box-shadow:inset 0 0 20px var(--sk-glow-2);
+}
+@keyframes skPulse{
+  0%,100%{opacity:.75}
+  50%    {opacity:1}
+}
+
+/* ---- centre emblem ---- */
+.sk-core{
+  position:relative;z-index:10;
+  width:clamp(4rem,6.3vw,5rem);
+  aspect-ratio:1;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#3f3f46,#18181b);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.sk-core::before,
+.sk-core::after{
+  content:'';position:absolute;inset:-14%;border-radius:50%;
+  filter:blur(22px);z-index:-1;
+}
+.sk-core::before{background:rgba(6,182,212,.28);animation:skPulse 3.4s ease-in-out infinite}
+.sk-core::after {background:rgba(147,51,234,.20);animation:skPulse 3.4s ease-in-out 1s infinite}
+.sk-core svg{width:52%;height:52%}
+
+/* ---- orbiting icons ---- */
+.sk-item{
+  position:absolute;
+  top:50%;left:50%;
+  width:var(--sk-size);height:var(--sk-size);
+  /* the angle is written by the rAF loop; cos/sin are baked into the two
+     translate custom properties so the compositor can animate them */
+  transform:
+    translate(
+      calc(var(--sk-cos,1) * var(--sk-r)),
+      calc(var(--sk-sin,0) * var(--sk-r))
+    )
+    translate(-50%,-50%);
+  transition:transform .3s var(--ease-out),width .3s var(--ease-out),
+             height .3s var(--ease-out),z-index 0s;
+  z-index:10;
+}
+.sk-item[data-hovered]{z-index:20}
+
+.sk-chip{
+  width:100%;height:100%;
+  padding:22%;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(31,31,35,.88);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 10px 22px rgba(0,0,0,.28);
+  cursor:pointer;
+  transition:transform .3s var(--ease-out),
+             background-color .3s ease,box-shadow .3s ease;
+}
+.sk-chip svg{width:100%;height:100%;display:block}
+
+/* hover: scale up, take the icon's own colour into the glow */
+.sk-item:hover .sk-chip,
+.sk-item:focus-within .sk-chip{
+  transform:scale(1.25);
+  background:rgba(24,24,27,.96);
+  box-shadow:0 14px 34px rgba(0,0,0,.4),
+             0 0 30px var(--sk-tint),
+             0 0 60px var(--sk-tint-2);
+}
+
+/* ---- label on hover ---- */
+.sk-label{
+  position:absolute;
+  top:calc(100% + .5rem);left:50%;
+  translate:-50% 0;
+  padding:.25rem .5rem;
+  border-radius:3px;
+  background:rgba(24,24,27,.95);
+  color:#fff;
+  font-family:var(--font-dm);
+  font-size:.7rem;letter-spacing:.04em;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:opacity .2s ease,transform .2s ease;
+}
+.sk-item:hover .sk-label,
+.sk-item:focus-within .sk-label{opacity:1;transform:translateY(0)}
+
+/* ---- the list below the orbits: same skills, readable ---- */
+/* The readable list under the orbit. On its own page it needed the full
+   content width and a big top margin; inside a Home section the band already
+   provides the width, so only the rhythm is kept here. */
+.sk-list{
+  width:100%;
+  margin:var(--spacing-lg) auto 0;
+  display:flex;flex-direction:column;
+}
+/* ---- the grouped list ----
+   One block per category: a small uppercase heading, then that category's
+   rows. Rows keep the hairline separators they had before, but now the
+   hairline belongs to the group, so the eye reads four lists rather than
+   one undifferentiated block of eight. */
+/* ---- three boxes, side by side ----
+   The categories are boxes rather than stacked sections, so each column
+   reads as one self-contained unit. All three are equal width: the column
+   count is what makes the row symmetric, and equal tracks are what makes
+   the boxes themselves equal. */
+.sk-boxes{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:var(--gap-width);
+  /* stretch, not start: the three boxes share one baseline and one height, so
+     the row reads as a set of equal units rather than three ragged cards */
+  align-items:stretch;
+}
+.sk-group{
+  border:1px solid currentColor;
+  padding:var(--spacing-sm);
+  display:flex;flex-direction:column;
+  /* the tag column sits inside the box, so a long value can never push the
+     border out; the row itself is a flex line with the name allowed to wrap */
+}
+.sk-group-title{
+  margin:0 0 .75rem;
+}
+
+.sk-group-title{
+  font-family:var(--font-dm);
+  font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:400;
+  color:var(--text-color);opacity:.55;
+  margin:0 0 .75rem;
+  padding-bottom:.5rem;
+  border-bottom:1px solid currentColor;
+}
+
+.sk-rows{display:flex;flex-direction:column}
+
+.sk-row{
+  position:relative;
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:.75rem;
+  padding-block:.55rem;
+  color:var(--text-color);
+}
+/* the hairline is a pseudo-element so it can be faint (opacity .18) while
+   the row text stays at full strength â€” an opacity on .sk-row would dim both */
+.sk-row::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:currentColor;opacity:.18;
+}
+.sk-rows .sk-row:last-child{border-bottom:0}
+
+/* Sized for a ~330px box, not for a full 1036px measure: "Computer Vision" is
+   ~250px on its own at the old size and would wrap to three lines inside the
+   border. The scale now tracks the box width, so the three columns stay
+   balanced at any viewport. */
+.sk-row-name{
+  font-family:var(--font-instrument);
+  font-size:clamp(1.05rem,1.55vw,1.6rem);
+  line-height:1.1;
+}
+.sk-row-tag{
+  font-family:var(--font-dm);
+  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  opacity:.6;white-space:nowrap;
+}
+.sk-row:hover .sk-row-name{font-style:italic}
+
+/* ---- reduced motion: freeze the orbits, keep the layout ---- */
+@media (prefers-reduced-motion:reduce){
+  .sk-ring::before,.sk-core::before,.sk-core::after{animation:none}
+  .sk-item{transition:none}
+  .sk-chip{transition:none}
+}
+
+/* ---- narrow screens: shrink the orbits rather than clip them ---- */
+@media (max-width:767px){
+  /* three boxes cannot share a phone's width, so they stack; the font goes
+     back up because a full-width row has room for it again */
+  .sk-boxes{grid-template-columns:1fr}
+  .sk-row-name{font-size:clamp(1.5rem,6vw,2rem)}
+}
+
+/* ============================================================
+   EDUCATION + CERTIFICATE â€” in-page bands
+   ------------------------------------------------------------
+   These are lists, not pages, so they live in the Home document
+   flow and the menu just points at an anchor. The layout follows
+   the site's own rhythm: the big serif section title, then rows
+   separated by a hairline, name on the left and the two pieces of
+   metadata pushed to the right.
+   ============================================================ */
+.band{
+  width:calc(var(--column-width) * 8 + var(--gap-width) * 7);
+  max-width:calc(100% - 2 * var(--margin-size));
+  margin:var(--spacing-2xl) auto 0;
+  color:var(--text-color);
+}
+
+.band-title{
+  font-family:var(--font-instrument);
+  font-size:clamp(2.4rem,4.9vw,5.9rem);
+  line-height:1;margin:0 0 var(--spacing-md);
+  color:var(--text-color);
+}
+
+.band-list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+}
+
+.band-row{
+  display:grid;
+  /* name gets the room it needs, the two metadata columns keep theirs */
+  grid-template-columns:1fr auto auto;
+  gap:var(--gap-width);
+  align-items:baseline;
+  padding-block:.85rem;
+  border-top:1px solid currentColor;
+}
+.band-row:last-child{border-bottom:1px solid currentColor}
+
+.band-name{
+  font-family:var(--font-instrument);
+  font-size:clamp(1.25rem,2.03vw,2.2rem);
+  line-height:1.1;
+}
+.band-row:hover .band-name{font-style:italic}
+
+.band-org{
+  font-family:var(--font-dm);
+  font-size:.75rem;letter-spacing:.06em;
+  text-transform:uppercase;
+  opacity:.7;
+  text-align:right;
+  white-space:nowrap;
+}
+.band-when{
+  font-family:var(--font-dm);
+  font-size:.75rem;letter-spacing:.06em;
+  opacity:.7;
+  white-space:nowrap;
+}
+
+/* ---- narrow screens: stack each row so long names never get squeezed.
+   Raised to 767px so the two nowrap metadata columns don't collide with a
+   long name on tablets. ---- */
+@media (max-width:767px){
+  .band-row{
+    grid-template-columns:1fr;
+    gap:.25rem;
+  }
+  .band-org,.band-when{text-align:left;white-space:normal}
+}
+
+/* ============================================================
+   ABOUT
+   ------------------------------------------------------------
+   One centred prose block, set in Instrument Serif at the same scale as
+   .band-name, so About reads as part of the same typographic family as the
+   Education and Certificate lists below it.
+
+   The measure is 7 of the 12 columns. Centred prose of more than two or three
+   lines is tiring to read â€” the eye has to re-centre on every return sweep â€”
+   so the block is kept narrow and the text is allowed to break naturally.
+   ============================================================ */
+.band--about{margin-top:var(--spacing-lg)}
+.band--about .band-title{text-align:center}
+
+.band--about .about-body{
+  width:calc(var(--column-width) * 7 + var(--gap-width) * 6);
+  max-width:100%;
+  margin-inline:auto;
+}
+
+.band--about .about-body p{
+  margin:0;
+  text-align:center;
+  font-family:var(--font-instrument);
+  font-size:clamp(1.25rem,2.03vw,2.2rem);
+  line-height:1.35;
+  color:var(--text-color);
+}
+
+@media (max-width:639px){
+  .band--about .about-body{width:100%}
+}

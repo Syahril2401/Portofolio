@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="600" height="750" role="img" aria-label="Photograph portrait placeholder">
+  <!--
+    PLACEHOLDER PHOTO LAYER
+    ===============================================================
+    You said you do not have a photo yet, so this is a neutral
+    placeholder that keeps the hover-reveal effect working.
+
+    TO USE YOUR OWN PHOTO
+    1. Put your image in this folder (e.g. portrait-photo.jpg)
+    2. In index.html change the src of the .portrait-photo img from
+       "portrait-photo.svg" to "portrait-photo.jpg".
+       That is all: the cross-fade, mask and framing are handled in CSS.
+
+    A roughly 4:5 portrait image fills the frame most cleanly.
+  -->
+  <defs>
+    <linearGradient id="ph-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9d6cd"/>
+      <stop offset="1" stop-color="#b9b5a9"/>
+    </linearGradient>
+    <linearGradient id="ph-fig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d897d"/>
+      <stop offset="1" stop-color="#6d6a60"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="750" fill="url(#ph-bg)"/>
+  <rect x="20" y="20" width="560" height="710" fill="none"
+        stroke="#000" stroke-opacity=".07" stroke-width="40"/>
+
+  <g fill="url(#ph-fig)">
+    <ellipse cx="300" cy="196" rx="74" ry="86"/>
+    <path d="M300 300c-64 0-116 40-124 100l-14 116c-3 26 12 44 38 48h200c26-4 41-22 38-48l-14-116c-8-60-60-100-124-100z"/>
+  </g>
+
+  <g font-family="ui-sans-serif, system-ui, sans-serif" fill="#3a382f">
+    <text x="300" y="600" font-size="26" letter-spacing="3"
+          text-anchor="middle" opacity=".62">YOUR PHOTO HERE</text>
+    <text x="300" y="634" font-size="15" letter-spacing="1.5"
+          text-anchor="middle" opacity=".45">replace portrait-photo.svg</text>
+  </g>
+</svg>

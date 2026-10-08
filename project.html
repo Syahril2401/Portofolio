@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project — Muhammad Syahril</title>
+<meta name="description" content="A project by Muhammad Syahril." />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="font-dm pj-page">
+
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<!-- ============ HEADER (shared with index.html) ============ -->
+<header class="site-header" id="header">
+  <a class="logo" href="index.html" aria-label="Back to home">MSA</a>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="menu">
+    <span class="menu-toggle-label" data-text="Menu">Menu</span>
+  </button>
+</header>
+
+<!-- ============ MENU OVERLAY ============ -->
+<div class="menu" id="menu" hidden>
+  <div class="menu-inner">
+    <nav class="menu-list" aria-label="Main">
+      <a class="menu-item" href="index.html"><span data-i18n="menu.home">Home</span></a>
+      <a class="menu-item" href="project.html"><span data-i18n="menu.project">Project</span></a>
+      <a class="menu-item" href="contact.html"><span data-i18n="menu.contact">Contact</span></a>
+    </nav>
+    <div class="menu-lang" aria-label="Language">
+      <button class="lang is-active" type="button" data-lang="id">ID</button>
+      <span class="lang-sep">|</span>
+      <button class="lang" type="button" data-lang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<main class="pj-main" id="pjMain">
+  <!-- Everything below is injected by script.js from the PROJECTS entry
+       that matches ?p=<uid> in the URL. One template, three pages. -->
+</main>
+
+<footer class="site-footer pj-footer">
+  <a class="footer-note" href="index.html" data-i18n="footer.back">Back to projects</a>
+  <a class="footer-contact" href="contact.html" data-i18n="footer.contact">Contact</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
